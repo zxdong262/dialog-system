@@ -1,0 +1,13 @@
+{
+  "name": "dialog-system"
+  ,"scripts": {
+    "start": "node app.js"
+  }
+  ,"devDependencies": {
+    "grunt": "~0.4.x"
+    ,"grunt-contrib-uglify": "*"
+    ,"grunt-newer": "*"
+    ,"express": "4.x"
+  }
+}
+

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>test dialog system for seajs</title>
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/test.css">
+</head>
+<body>
+<div id="wrapper" class="centered">
+	<h1>test dialog system demo 1</h1>
+
+	<p class="btns">
+		<span class="pointer btn btn-a mgr mgb op-popup1">ds.popup('some text')</span>
+		<span class="pointer btn btn-a mgr mgb op-popup2">ds.popup('some text', 3000)</span>
+		<span class="pointer btn btn-a mgr mgb op-info">ds.info('some text')</span>
+		<span class="pointer btn btn-a mgr mgb op-error">ds.error('some text')</span>
+		<span class="pointer btn btn-a mgr mgb op-ok">ds.ok('some text')</span>
+		<span class="pointer btn btn-a mgr mgb op-alert">ds.alert('some text', 5000)</span>
+		<span class="pointer btn btn-a mgr mgb op-left">ds.left('some text')</span>
+		<span class="pointer btn btn-a mgr mgb op-right">ds.right('some text')</span>
+		<span class="pointer btn btn-a mgr mgb op-top">ds.top('some text')</span>
+		<span class="pointer btn btn-a mgr mgb op-left1">ds.left('some text', 1000)</span>
+		<span class="pointer btn btn-a mgr mgb op-dialog">ds.dialog({ msg: 'some text', modal: true })</span>
+		<span class="pointer btn btn-a mgr mgb op-dialog1">ds.dialog({ msg: 'some text' })</span>
+	</p>
+</div>
+<script src="js/vender/sea.js" id="seajsnode"></script>
+<script>
+seajs.config({
+	base: '/js/'
+  ,alias: {
+    'jquery': 'vender/jquery-1.11.1.min.js'
+    ,'ds': 'ds.js'
+  }
+})
+</script> 
+<script>
+seajs.use(['jquery', 'ds'], function($, ds) {
+	$(function() {
+		var ds = $.ds
+		$('.btns .btn').click(function() {
+			var t = $(this)
+			eval(t.html())
+		})
+	})
+})
+</script>
+</body>
+</html>
