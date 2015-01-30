@@ -55,7 +55,7 @@
 			,typeHtml: {
 				default: '<i class="ds-default ds-type-unit"></i>'
 				,info: '<i class="ds-info ds-type-unit">i</i>'
-				,alert: '<i class="ds-alert ds-type-unit">!</i>'
+				,warn: '<i class="ds-warn ds-type-unit">!</i>'
 				,error: '<i class="ds-error ds-type-unit">&Chi;</i>'
 				,ok: '<i class="ds-ok ds-type-unit">&radic;</i>'
 			}
@@ -239,8 +239,8 @@
 		$.ds.info = function(msg, timer, options) {
 			return $.ds.popup(msg, timer, 'info', options)
 		}
-		$.ds.alert = function(msg, timer, options) {
-			return $.ds.popup(msg, timer, 'alert', options)
+		$.ds.warn = function(msg, timer, options) {
+			return $.ds.popup(msg, timer, 'warn', options)
 		}
 		$.ds.error = function(msg, timer, options) {
 			return $.ds.popup(msg, timer, 'error', options)
