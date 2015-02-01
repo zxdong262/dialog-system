@@ -3,6 +3,7 @@
   ,"scripts": {
     "start": "node app.js"
   }
+  ,"version": "0.0.5"
   ,"devDependencies": {
     "grunt": "~0.4.x"
     ,"grunt-contrib-uglify": "*"

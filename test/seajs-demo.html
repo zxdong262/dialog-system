@@ -11,19 +11,24 @@
 	<h1>test dialog system demo 1</h1>
 
 	<p class="btns">
-		<span class="pointer btn btn-a mgr mgb op-popup1">ds.popup('some text')</span>
-		<span class="pointer btn btn-a mgr mgb op-popup2">ds.popup('some text', 3000)</span>
-		<span class="pointer btn btn-a mgr mgb op-info">ds.info('some text')</span>
-		<span class="pointer btn btn-a mgr mgb op-error">ds.error('some text')</span>
-		<span class="pointer btn btn-a mgr mgb op-ok">ds.ok('some text')</span>
-		<span class="pointer btn btn-a mgr mgb op-warn">ds.warn('some text', 5000)</span>
-		<span class="pointer btn btn-a mgr mgb op-left">ds.left('some text')</span>
-		<span class="pointer btn btn-a mgr mgb op-right">ds.right('some text')</span>
-		<span class="pointer btn btn-a mgr mgb op-top">ds.top('some text')</span>
-		<span class="pointer btn btn-a mgr mgb op-left1">ds.left('some text', 1000)</span>
-		<span class="pointer btn btn-a mgr mgb op-dialog">ds.dialog({ msg: 'some text', modal: true })</span>
-		<span class="pointer btn btn-a mgr mgb op-dialog1">ds.dialog({ msg: 'some text' })</span>
+		<span class="ds-pointer btn btn-a mgr mgb op-popup1">ds.popup('some text')</span>
+		<span class="ds-pointer btn btn-a mgr mgb op-popup2">ds.popup('some text', 3000)</span>
+		<span class="ds-pointer btn btn-a mgr mgb op-info">ds.info('some text')</span>
+		<span class="ds-pointer btn btn-a mgr mgb op-error">ds.error('some text')</span>
+		<span class="ds-pointer btn btn-a mgr mgb op-ok">ds.ok('some text')</span>
+		<span class="ds-pointer btn btn-a mgr mgb op-warn">ds.warn('some text', 5000)</span>
+		<span class="ds-pointer btn btn-a mgr mgb op-left">ds.left('some text')</span>
+		<span class="ds-pointer btn btn-a mgr mgb op-right">ds.right('some text')</span>
+		<span class="ds-pointer btn btn-a mgr mgb op-top">ds.top('some text')</span>
+		<span class="ds-pointer btn btn-a mgr mgb op-left1">ds.left('some text', 1000)</span>
+		<span class="ds-pointer btn btn-a mgr mgb op-dialog">ds.dialog({ msg: 'some text', modal: true })</span>
+		<span class="ds-pointer btn btn-a mgr mgb op-dialog1">ds.dialog({ msg: 'some text' })</span>
+		<span class="ds-pointer btn btn-a mgr mgb op-dialog1">ds.alert('msg', $('#test'))</span>
+		<span class="ds-pointer btn btn-a mgr mgb op-dialog1">ds.alert('msg', $('#test'), 'warn')</span>
+		<span class="ds-pointer btn btn-a mgr mgb op-dialog1">ds.alert('msg', $('#test'), 'error')</span>
+		<span class="ds-pointer btn btn-a mgr mgb op-dialog1">ds.alert('msg', $('#test'), 'ok')</span>
 	</p>
+	<p id="test"></p>
 </div>
 <script src="js/vender/sea.js" id="seajsnode"></script>
 <script>

@@ -53,7 +53,7 @@
 			}
 			,closeHtml: '&times;'
 			,typeHtml: {
-				default: '<i class="ds-default ds-type-unit"></i>'
+				default: ''
 				,info: '<i class="ds-info ds-type-unit">i</i>'
 				,warn: '<i class="ds-warn ds-type-unit">!</i>'
 				,error: '<i class="ds-error ds-type-unit">&Chi;</i>'
@@ -67,9 +67,7 @@
 			this.init(opts)
 			if(this.defs.open) {
 				this.show()
-				if(this.defs.timer) this.handler = setTimeout(function() {
-					th.hide()
-				}, this.defs.timer)
+				if(this.defs.timer) this.handler = setTimeout(th.hide, this.defs.timer)
 			}
 
 		}
@@ -95,6 +93,7 @@
 			this.dom = $('#ds-unit-' + this.id)
 			this.dom.css(defs.css)
 			this.dom.on('click', '.ds-close', function() {
+				clearTimeout(th.handler)
 				th.hide()
 			})
 
@@ -234,6 +233,10 @@
 					,dsType: 'popup'
 				}
 			)
+		}
+
+		$.ds.alert = function(msg, wrap, type,  method) {
+			wrap[method || 'after']('<div class="ds-pd ds-alert ds-alert-' + (type || 'info') + '">' + msg + '</div>')
 		}
 
 		$.ds.info = function(msg, timer, options) {
