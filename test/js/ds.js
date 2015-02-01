@@ -235,7 +235,15 @@
 			)
 		}
 
-		$.ds.alert = function(msg, wrap, type,  method) {
+		$.ds.alert = function(msg, wrap, timer, type, method, options) {
+			if($.isPlainObject(msg)) {
+				options = $.extend({}, msg)
+				msg = options.msg
+				wrap = options.wrap
+				timer = options.timer
+				type = options.type
+				method = options.method
+			}
 			wrap[method || 'after']('<div class="ds-pd ds-alert ds-alert-' + (type || 'info') + '">' + msg + '</div>')
 		}
 
