@@ -24,9 +24,11 @@
 		//DS Class
 		$.dsOption = {
 			indexCounter: 250
-			,defaultWidth: 200
+			,defaultWidth: 300
 			,defaultTimer: 4000
 			,defaultTitle: 'Info'
+			,defaultConfirmBtnHtml: '<span class="ds-pointer ds-btn ds-btn-green">OK</span>'
+			,defaultCancelBtnHtml: '<span class="ds-pointer ds-btn ds-btn-red ds-mgl">Cancel</span>'
 			,defaultTop: 40
 			,defaults: {
 				modal: false
@@ -42,6 +44,7 @@
 				,msg: '' //dialog message html
 				,open: true //if false, will only init it, will not open it.
 				,title: '' //for dialog with title
+				,btns: []
 				,hasCloseBtn: true
 				,selfDestroy: false //if true, after this.hide(), instance will self-destroy.
 
@@ -67,7 +70,9 @@
 			this.init(opts)
 			if(this.defs.open) {
 				this.show()
-				if(this.defs.timer) this.handler = setTimeout(th.hide, this.defs.timer)
+				if(this.defs.timer) this.handler = setTimeout(function() {
+					th.hide()
+				}, this.defs.timer)
 			}
 
 		}
@@ -87,7 +92,9 @@
 			'<span class="ds-inner">' +
 			'<span class="ds-content">' +
 			$.dsOption.typeHtml[defs.type] + defs.msg +
-			'</span></span>' +
+			'</span>' +
+			th.buildBtns(defs.btns) +
+			'</span>' +
 			(defs.title?'':(defs.hasCloseBtn?'<span class="ds-btn-close ds-close">' + $.dsOption.closeHtml + '</span>':'')) +
 			'</span>')
 			this.dom = $('#ds-unit-' + this.id)
@@ -96,12 +103,29 @@
 				clearTimeout(th.handler)
 				th.hide()
 			})
+			if(defs.btns.length) this.dom.find('.ds-btns').children().each(function(i) {
+				$(this).click(function() {
+					defs.btns[i].callback.call(th)
+				})
+			})
 
 			if(defs.modal) {
 				$('body').append('<div class="ds-overlay ds-hide" id="ds-overlay-' + id + '" style="z-index:' + zIndex + '"></div>')
 				this.overlay = $('#ds-overlay-' + this.id)
 			}
 
+		}
+
+		DS.prototype.buildBtns = function(btns) {
+			var len = btns.length
+			,i = 0
+			,res = ''
+			,it
+			for(;i < len;i ++) {
+				it = btns[i]
+				res += it.html
+			}
+			return res?'<span class="ds-block ds-btns">' + res + '</span>':''
 		}
 
 		DS.prototype.destroy = function() {
@@ -171,7 +195,7 @@
 			,left = 0
 			,css = {}
 			,type = options.type
-			,
+			,btns = $.extend([], options.btns, options2.btns)
 
 			cw = cw > ww?ww:cw
 			left = (ww - cw) / 2
@@ -182,6 +206,7 @@
 					'<div style="width:' + cw + 'px">' +
 					'<div class="ds-content">' +
 					dopt.typeHtml[type?type:'default'] + options.msg +
+					DS.prototype.buildBtns(btns) +
 					'</div></div></div>'
 				)
 
@@ -235,8 +260,30 @@
 			)
 		}
 
-		$.ds.alert = function(msg, wrap, type,  method) {
-			wrap[method || 'after']('<div class="ds-pd ds-alert ds-alert-' + (type || 'info') + '">' + msg + '</div>')
+		$.ds.alert = function(msg, wrap, timer, type, method, options) {
+			if($.isPlainObject(msg)) options = $.extend({}, msg)
+			else options = options || {}
+
+			options.uid = new Date().getTime()
+			msg = options.msg || msg
+			wrap = options.wrap || wrap
+			timer = options.timer || timer
+			type = options.type || type || 'info'
+			method = options.method || method
+
+			wrap[method || 'after']('<div id="alert-unit-' + options.uid + '" class="ds-pd ds-alert ds-alert-' + type + '">' + 
+				(options.noTypeIcon?'' : $.dsOption.typeHtml[type]) +
+				msg + 
+				(options.noCloseBtn?'':'<span class="ds-pointer ds-alert-close">&times;</span>') +
+			'</div>')
+			if(!options.noCloseBtn) $('#alert-unit-' + options.uid).on('click', '.ds-alert-close', function() {
+				$('#alert-unit-' + options.uid).remove()
+			})
+
+			if(timer && !options.noCloseBtn) setTimeout(function() {
+				$('#alert-unit-' + options.uid).remove()
+			}, timer)
+
 		}
 
 		$.ds.info = function(msg, timer, options) {
@@ -258,6 +305,31 @@
 			return $.ds.ds(options, { dsType: 'dialog' })
 		}
 
+		$.ds.confirm = function(options) {
+			options = options || {}
+			options.title = options.title?options.title:$.dsOption.defaultTitle
+			return $.ds.ds(options, {
+				dsType: 'dialog'
+				,selfDestroy: true
+				,btns: [
+					{
+						html: $.dsOption.defaultConfirmBtnHtml
+						,callback: function() {
+							this.hide.call(this)
+							options.confirmCallback.call(this, true)
+						}
+					}
+					,{
+						html: $.dsOption.defaultCancelBtnHtml
+						,callback: function() {
+							this.hide.call(this)
+							options.confirmCallback.call(this, false)
+						}
+					}
+				]
+			})
+		}
+
 		$.ds.right = function(msg, timer, type, options) {
 			if($.isPlainObject(msg)) {
 				options = msg
@@ -272,20 +344,9 @@
 			,tid = 'id' + new Date().getTime()
 			,cw = 0
 			,ch = 0
-			,body = $('body')
-			body.append(
-				'<div id="' + tid + '" style="position:fixed;left:0;top:0;opacity:0;filter:alpha(opacity=0);z-index:-1">' +
-				'<div style="max-width:100%">' +
-				'<span class="ds-content">' +
-				dopt.typeHtml[type?type:'default'] + msg +
-				'</span></div></div>'
-			)
-
-			cw = $('#' + tid + ' .ds-content').width()
-			ch = $('#' + tid + ' .ds-content').height()
-
-			$('#' + tid).remove()
-
+			,cs = calContentSize(msg, type, options.btns)
+			cw = cs.cw
+			ch = cs.ch
 			return $.ds.ds(
 				$.extend({ hasCloseBtn: false }, options, {
 					msg: msg
@@ -332,18 +393,9 @@
 			,tid = 'id' + new Date().getTime()
 			,cw = 0
 			,ch = 0
-			$('body').append(
-				'<div id="' + tid + '" style="position:fixed;left:0;top:0;opacity:0;filter:alpha(opacity=0);z-index:-1">' +
-				'<div style="max-width:100%">' +
-				'<span class="ds-content">' +
-				dopt.typeHtml[type?type:'default'] + msg +
-				'</span></div></div>'
-			)
-
-			cw = $('#' + tid + ' .ds-content').width()
-			ch = $('#' + tid + ' .ds-content').height()
-
-			$('#' + tid).remove()
+			,cs = calContentSize(msg, type, options.btns)
+			cw = cs.cw
+			ch = cs.ch
 
 			return $.ds.ds(
 				$.extend({ hasCloseBtn: false }, options, {
@@ -391,19 +443,10 @@
 			,tid = 'id' + new Date().getTime()
 			,cw = 0
 			,ch = 0
-			,body = $('body')
-			body.append(
-				'<div id="' + tid + '" style="position:fixed;left:0;top:0;opacity:0;filter:alpha(opacity=0);z-index:-1">' +
-				'<div style="max-width:100%">' +
-				'<span class="ds-content">' +
-				dopt.typeHtml[type?type:'default'] + msg +
-				'</span></div></div>'
-			)
+			,cs = calContentSize(msg, type, options.btns)
+			cw = cs.cw
+			ch = cs.ch
 
-			cw = $('#' + tid + ' .ds-content').width()
-			ch = $('#' + tid + ' .ds-content').height()
-
-			$('#' + tid).remove()
 			return $.ds.ds(
 				$.extend({ hasCloseBtn: false }, options, {
 					msg: msg
@@ -436,7 +479,25 @@
 			)
 		}
 
-
+	function calContentSize(msg, type, btns) {
+		var tid = new Date().getTime()
+		,cw,ch
+		$('body').append(
+			'<div id="' + tid + '" style="position:fixed;left:0;top:0;opacity:0;filter:alpha(opacity=0);z-index:-1">' +
+			'<div style="max-width:100%">' +
+			'<span class="ds-content">' +
+			$.dsOption.typeHtml[type?type:'default'] + msg +
+			DS.prototype.buildBtns(btns || []) +
+			'</span></div></div>'
+		)
+		cw = $('#' + tid + ' .ds-content').width()
+		ch = $('#' + tid + ' .ds-content').height()
+		$('#' + tid).remove()
+		return {
+			cw: cw
+			,ch: ch
+		}
+	}
 	//code end
 
 	}

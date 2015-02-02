@@ -24,14 +24,15 @@
 		<span class="ds-pointer btn btn-a mgr mgb op-dialog">ds.dialog({ msg: 'some text', modal: true })</span>
 		<span class="ds-pointer btn btn-a mgr mgb op-dialog1">ds.dialog({ msg: 'some text' })</span>
 		<span class="ds-pointer btn btn-a mgr mgb op-dialog1">ds.alert('msg', $('#test'))</span>
-		<span class="ds-pointer btn btn-a mgr mgb op-dialog1">ds.alert('msg', $('#test'), 'warn')</span>
-		<span class="ds-pointer btn btn-a mgr mgb op-dialog1">ds.alert('msg', $('#test'), 'error')</span>
-		<span class="ds-pointer btn btn-a mgr mgb op-dialog1">ds.alert('msg', $('#test'), 'ok')</span>
+		<span class="ds-pointer btn btn-a mgr mgb op-dialog1">ds.alert('msg', $('#test'), 3000, 'warn')</span>
+		<span class="ds-pointer btn btn-a mgr mgb op-dialog1">ds.alert('msg', $('#test'), 3000, 'error')</span>
+		<span class="ds-pointer btn btn-a mgr mgb op-dialog1">ds.alert('msg', $('#test'), 3000, 'ok')</span>
+		<span class="ds-pointer btn btn-a mgr mgb op-dialog1">ds.confirm({'msg': 'delete file can not be reverted.', title: 'Are you sure?', confirmCallback: function(flag) { if(flag) ds.ok('deleted');else ds.warn('not deleted') }})</span>
 	</p>
 	<p id="test"></p>
 </div>
 <script src="js/vender/jquery-1.11.1.min.js"></script>
-<script src="../ds.js"></script> 
+<script src="js/ds.js"></script> 
 <script>
 $(function() {
 
